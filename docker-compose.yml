@@ -1,0 +1,45 @@
+version: "3.6"
+
+services:
+  nextcloud-aio-mastercontainer:
+    image: nextcloud/all-in-one:latest
+    init: true
+    restart: unless-stopped
+    container_name: nextcloud-aio-mastercontainer
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+    environment:
+      - NEXTCLOUD_DATADIR=/mnt/datanew
+      - APACHE_PORT=11000
+      - APACHE_IP_BINDING=0.0.0.0
+      - NEXTCLOUD_ENABLE_DRI_DEVICE=false
+      - SKIP_DOMAIN_VALIDATION=true
+#    depends_on:
+      - caddy
+#    network_mode: host
+
+  caddy:
+    image: caddy:alpine
+    restart: unless-stopped
+    container_name: caddy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+     - ./Caddyfile:/etc/caddy/Caddyfile
+     - ./certs:/certs
+     - ./config:/config
+     - ./data:/data
+     - ./sites:/srv
+    network_mode: host
+
+volumes:
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer
+#  external: true
+#extra_hosts:
+#  host.docker.internal: host-gateway

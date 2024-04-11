@@ -1,0 +1,12 @@
+{
+    debug
+    admin 0.0.0.0:2019
+}
+
+nextall.j.scaleforce.net {
+    reverse_proxy https://10.11.9.31:8080 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
+}
