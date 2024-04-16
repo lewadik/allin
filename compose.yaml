@@ -7,8 +7,11 @@ services:
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
     volumes:
       - db:/var/lib/mysql
-    env_file:
-      - db.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=yoursqlrootpassword
+      - MYSQL_PASSWORD=yourmysqlpassword
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=yourmysqluser
 
   redis:
     image: redis
@@ -29,8 +32,6 @@ services:
     environment:
       - MYSQL_HOST=db
       - REDIS_HOST_PASSWORD=your_redis_password
-    env_file:
-      - db.env
     depends_on:
       - db
       - redis
