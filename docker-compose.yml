@@ -1,0 +1,14 @@
+version: "3.3"
+services:
+  getashell:
+    tty: true
+    container_name: getashell
+    ports:
+      - 3000:3000
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - /some/awesome/location/data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    image: ghcr.io/steveiliop56/getashell:latest
+networks: {}
