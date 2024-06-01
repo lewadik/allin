@@ -1,14 +1,20 @@
-version: "3.3"
+version: '3.6'
 services:
-  getashell:
-    tty: true
-    container_name: getashell
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    container_name: gitlab
+    restart: always
+    hostname: '${env.domain}'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        # Add any other gitlab.rb configuration here, each on its own line
+        external_url 'https://${env.domain}'
     ports:
-      - 3000:3000
-    extra_hosts:
-      - host.docker.internal:host-gateway
+      - '80:80'
+      - '443:443'
+      - '22:22'
     volumes:
-      - /some/awesome/location/data:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    image: ghcr.io/steveiliop56/getashell:latest
-networks: {}
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+    shm_size: '256m'
